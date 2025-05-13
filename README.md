@@ -1,4 +1,4 @@
-# README for Visual Training Project in 2025 Chinese College Students' Engineering Innovation Competition (Waste Sorting Track)
+# Visual Training Project in 2025 Chinese College Students' Engineering Innovation Competition (Waste Sorting Track)
 
 ## Project Overview
 This project is developed for the visual training segment of the 2025 Chinese College Students' Engineering Innovation Competition (Waste Sorting Track). It integrates the YOLOv5 training framework, testing code, a waste sorting dataset (in YOLO format with images), and pre-trained models.
@@ -74,9 +74,11 @@ This project is developed for the visual training segment of the 2025 Chinese Co
 To evaluate the adaptability of the model, we conducted tests on an unseen validation dataset. The following images show some slices from the validation process. As can be seen, the recognition results generally meet the requirements, with detection boxes closely fitting the target objects. For targets like batteries and pills, the bounding boxes accurately locate the objects, demonstrating the effectiveness of YOLOv5 in object localization tasks and meeting the needs for image positioning.
 However, the confidence scores for some waste categories did not reach the expected level, and there was significant fluctuation in the confidence levels of certain classes. For example, the confidence score for "yaopian (pills)" was as low as 0.4 in some annotations, indicating that the model's feature extraction for such targets (e.g., pills/medicine boxes with complex shapes and colors) lacks stability. 
 To address this issue, future improvements could include enriching the training dataset (e.g., adding samples of pills from different angles and occlusion scenarios) and adjusting model hyperparameters (e.g., optimizing the loss function and learning rate strategy) to enhance the model's robustness in recognizing objects with complex morphologies.
-![image](https://github.com/user-attachments/assets/2ce91204-6009-463d-aadf-542a82f9854b)![image](https://github.com/user-attachments/assets/de9df83b-78fd-436c-8d27-964cba7f86aa)![image](https://github.com/user-attachments/assets/9f037c1c-454e-44e0-b980-691043503da6)
 
-![image](https://github.com/user-attachments/assets/56cce496-7f9f-4b3a-b5e9-a3b5abb2185e)
+![image](https://github.com/user-attachments/assets/2ce91204-6009-463d-aadf-542a82f9854b)\n
+![image](https://github.com/user-attachments/assets/de9df83b-78fd-436c-8d27-964cba7f86aa)\n
+![image](https://github.com/user-attachments/assets/9f037c1c-454e-44e0-b980-691043503da6)\n
+![image](https://github.com/user-attachments/assets/56cce496-7f9f-4b3a-b5e9-a3b5abb2185e)\n
 
 ## Traning Idea:
 ### CBAM Attention Mechanism
@@ -93,18 +95,15 @@ The Convolutional Block Attention Module (CBAM) is an attention mechanism design
    - Computes average and max values across channels to capture spatial cues.  
    - A convolutional layer processes these pooled features to generate a spatial attention map.  
    - This map is applied to the feature map to enhance regions containing critical information.
-![image](https://github.com/user-attachments/assets/8abf8922-bfee-4165-a7a5-4edc6410f429)
+![image](https://github.com/user-attachments/assets/8abf8922-bfee-4165-a7a5-4edc6410f429)\n
 
-
-In YOLOv5, integrating CBAM allows the model to:  
-- Prioritize discriminative features (e.g., small objects, fine-grained details).  
-- Enhance localization accuracy by focusing on relevant spatial regions.  
-- Improve robustness to background noise and occlusion.
 
 This approach aligns with our goal of maximizing YOLOv5's efficiency while maintaining its compact size.
 
 After integrating the YOLOv5 backbone network with the CBAM attention mechanism, we compared the changes in various parameters and plotted relevant graphs. Based on the execution results, line charts have been successfully drawn to compare the trends of each parameter with the number of training epochs when the attention mechanism is used and when it is not. From these trends, the following conclusions can be drawn: 
-![image](https://github.com/user-attachments/assets/afb7ca6b-41ed-471a-9d63-effeedc559d0)
+
+![image](https://github.com/user-attachments/assets/afb7ca6b-41ed-471a-9d63-effeedc559d0)\n
+
 ### the Asymptotic Feature Pyramid Network（AFPN）
 To further improve the recognition accuracy (mAP) of YOLOv5s, we modified the backbone network of YOLOv5s and incorporated a network structure designed for detecting small objects, thereby achieving a further boost in accuracy.
 
@@ -117,4 +116,27 @@ SPPCSPC achieves the effective extraction and fusion of multi-scale features by 
 
 ### Compare Different Modles
 Now, we will compare the mAP (Mean Average Precision) trends of three models through visualization and conduct an optimal analysis.
+![image](https://github.com/user-attachments/assets/c07d9987-eade-4368-a1d6-e9247f6ccca2)\n
+|modles|CBAM|SPPCSPC|AFPN|
+|--|--|--|--|
+|MAX(MAP(0.5 - 0.95))|0.78371|0.78918|0.77229|
+|MAX(MAP(0.5))|0.995|0.99495|0.9512|
+Based on the analysis of the above chart, the following conclusions can be drawn:
+① CBAM achieved the highest value of 0.995 in the single-threshold mAP@0.5, slightly higher than the 0.99495 of SPPCSPC.
+② SPPCSPC performed best in the comprehensive threshold mAP@0.5 - 0.95, reaching 0.78918.
+③ AFPN was significantly lower than the other models in both indicators.
+
+Integrate different combinations of multiple models and conduct combined training on the same dataset. Evaluate the models by observing their mAP values: 
+
+|modles|MAP(0.5)|MAP(0.5 - 0.9)|
+|--|--|--|
+|CBAM+SPPCSPC|0.995|0.79171|
+|CBAM+SPPCSPC+AFPN|0.995|0.78503|
+|CBAM+AFPN|0.995|0.77681|
+
+Under the metrics/mAP_0.5:0.95 indicator, the CBAM+SPPCSPC model has the highest optimal value. This means that this model has relatively better comprehensive detection performance within a wider IoU range (from 0.5 to 0.95).
+
+Overall, if more emphasis is placed on the metrics/mAP_0.5 indicator, the three models perform similarly. However, if more importance is attached to the metrics/mAP_0.5:0.95 indicator, the CBAM+SPPCSPC model performs optimally.
+
+In summary, the MAP(0.5 - 0.9) of the CBAM+SPPCSPC is the best among all models. Followed by SPPCSPC and CBAM+SPPCSPC+AFPN. The performance of CBAM and AFPN is not as promising compared to other types.
 
