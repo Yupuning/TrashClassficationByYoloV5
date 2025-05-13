@@ -2,6 +2,16 @@
 
 ## Project Overview
 This project is developed for the visual training segment of the 2025 Chinese College Students' Engineering Innovation Competition (Waste Sorting Track). It integrates the YOLOv5 training framework, testing code, a waste sorting dataset (in YOLO format with images), and pre-trained models.
+### Preface
+In the preliminary round of this competition, ten types of waste were clearly specified. These wastes have significant similarities in shape and color, and there are also many small objects, which undoubtedly pose great challenges to image recognition and localization. To effectively address such issues, we employed the YOLOv5 object detection algorithm for image recognition and localization tasks.
+
+YOLOv5 has unique advantages. It adopts an end - to - end network structure and ingeniously transforms the object detection task into a regression problem. This transformation enables the algorithm to directly detect and classify objects. Its working principle is to apply a Convolutional Neural Network (CNN) to the entire image, carefully dividing the image into several grids, and then predicting the class probability and bounding box of each grid.
+
+In practical applications, YOLOv5 has demonstrated high accuracy and practicality. It can accurately recognize these ten types of waste with similar features and containing small objects in complex waste image scenes, and precisely locate their positions in the images, providing reliable data support for subsequent waste - handling related work. 
+
+ 
+### DataBase
+Based on the external characteristics and internal properties of waste, we first conduct a detailed classification of waste and then categorize it into four major types of waste. Specifically, we initially divide waste into the following categories: stones (including bricks), ceramic tiles, batteries, pills (together with medicine boxes), recyclable items (specifically referring to bottles or cups with a volume of less than 100 milliliters), and common vegetables such as white radishes, red radishes, and potatoes.
 
 ## Directory Structure and File Descriptions
 
@@ -75,10 +85,10 @@ To evaluate the adaptability of the model, we conducted tests on an unseen valid
 However, the confidence scores for some waste categories did not reach the expected level, and there was significant fluctuation in the confidence levels of certain classes. For example, the confidence score for "yaopian (pills)" was as low as 0.4 in some annotations, indicating that the model's feature extraction for such targets (e.g., pills/medicine boxes with complex shapes and colors) lacks stability. 
 To address this issue, future improvements could include enriching the training dataset (e.g., adding samples of pills from different angles and occlusion scenarios) and adjusting model hyperparameters (e.g., optimizing the loss function and learning rate strategy) to enhance the model's robustness in recognizing objects with complex morphologies.
 
-![image](https://github.com/user-attachments/assets/2ce91204-6009-463d-aadf-542a82f9854b)\n
-![image](https://github.com/user-attachments/assets/de9df83b-78fd-436c-8d27-964cba7f86aa)\n
-![image](https://github.com/user-attachments/assets/9f037c1c-454e-44e0-b980-691043503da6)\n
-![image](https://github.com/user-attachments/assets/56cce496-7f9f-4b3a-b5e9-a3b5abb2185e)\n
+![image](https://github.com/user-attachments/assets/2ce91204-6009-463d-aadf-542a82f9854b)
+![image](https://github.com/user-attachments/assets/de9df83b-78fd-436c-8d27-964cba7f86aa)
+![image](https://github.com/user-attachments/assets/9f037c1c-454e-44e0-b980-691043503da6)
+![image](https://github.com/user-attachments/assets/56cce496-7f9f-4b3a-b5e9-a3b5abb2185e)
 
 ## Traning Idea:
 ### CBAM Attention Mechanism
@@ -95,14 +105,15 @@ The Convolutional Block Attention Module (CBAM) is an attention mechanism design
    - Computes average and max values across channels to capture spatial cues.  
    - A convolutional layer processes these pooled features to generate a spatial attention map.  
    - This map is applied to the feature map to enhance regions containing critical information.
-![image](https://github.com/user-attachments/assets/8abf8922-bfee-4165-a7a5-4edc6410f429)\n
+   
+![image](https://github.com/user-attachments/assets/8abf8922-bfee-4165-a7a5-4edc6410f429)
 
 
 This approach aligns with our goal of maximizing YOLOv5's efficiency while maintaining its compact size.
 
 After integrating the YOLOv5 backbone network with the CBAM attention mechanism, we compared the changes in various parameters and plotted relevant graphs. Based on the execution results, line charts have been successfully drawn to compare the trends of each parameter with the number of training epochs when the attention mechanism is used and when it is not. From these trends, the following conclusions can be drawn: 
 
-![image](https://github.com/user-attachments/assets/afb7ca6b-41ed-471a-9d63-effeedc559d0)\n
+![image](https://github.com/user-attachments/assets/afb7ca6b-41ed-471a-9d63-effeedc559d0)
 
 ### the Asymptotic Feature Pyramid Network（AFPN）
 To further improve the recognition accuracy (mAP) of YOLOv5s, we modified the backbone network of YOLOv5s and incorporated a network structure designed for detecting small objects, thereby achieving a further boost in accuracy.
@@ -116,11 +127,14 @@ SPPCSPC achieves the effective extraction and fusion of multi-scale features by 
 
 ### Compare Different Modles
 Now, we will compare the mAP (Mean Average Precision) trends of three models through visualization and conduct an optimal analysis.
-![image](https://github.com/user-attachments/assets/c07d9987-eade-4368-a1d6-e9247f6ccca2)\n
+
+![image](https://github.com/user-attachments/assets/c07d9987-eade-4368-a1d6-e9247f6ccca2)
+
 |modles|CBAM|SPPCSPC|AFPN|
 |--|--|--|--|
 |MAX(MAP(0.5 - 0.95))|0.78371|0.78918|0.77229|
 |MAX(MAP(0.5))|0.995|0.99495|0.9512|
+
 Based on the analysis of the above chart, the following conclusions can be drawn:
 ① CBAM achieved the highest value of 0.995 in the single-threshold mAP@0.5, slightly higher than the 0.99495 of SPPCSPC.
 ② SPPCSPC performed best in the comprehensive threshold mAP@0.5 - 0.95, reaching 0.78918.
