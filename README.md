@@ -1,5 +1,8 @@
 # Visual Training Project in 2025 Chinese College Students' Engineering Innovation Competition (Waste Sorting Track)
 
+Database: https://pan.baidu.com/s/1vhSthgyAPd1IRTMmNEt3Hg?pwd=0219
+MyBlog: https://blog.csdn.net/2302_80554221/article/details/147170399?spm=1001.2014.3001.5501
+
 ## Project Overview
 This project is developed for the visual training segment of the 2025 Chinese College Students' Engineering Innovation Competition (Waste Sorting Track). It integrates the YOLOv5 training framework, testing code, a waste sorting dataset (in YOLO format with images), and pre-trained models.
 ### Preface
